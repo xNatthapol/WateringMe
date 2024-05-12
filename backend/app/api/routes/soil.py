@@ -32,16 +32,11 @@ def get_current_soil(db: Session = Depends(get_db)):
 def get_predicted_sm(db: Session = Depends(get_db)):
 
     historical_data = (
-        db.query(
-            Weather.temper,
-            Weather.humid,
-            Weather.precip,
-            Kidbright.sm
-        )
+        db.query(Weather.temper, Weather.humid, Weather.precip, Kidbright.sm)
         .join(
             Kidbright,
-            (func.date(Weather.ts) == func.date(Kidbright.ts)) &
-            (func.extract("hour", Weather.ts) == func.extract("hour", Kidbright.ts)),
+            (func.date(Weather.ts) == func.date(Kidbright.ts))
+            & (func.extract("hour", Weather.ts) == func.extract("hour", Kidbright.ts)),
         )
         .all()
     )
@@ -56,21 +51,21 @@ def get_predicted_sm(db: Session = Depends(get_db)):
             WeatherForecast.lon,
             WeatherForecast.humid,
             WeatherForecast.temper,
-            WeatherForecast.precip
+            WeatherForecast.precip,
         )
         .filter(
-            current_hour < func.extract('hour', WeatherForecast.ts),
-            current_date == func.date(WeatherForecast.ts)
+            current_hour < func.extract("hour", WeatherForecast.ts),
+            current_date == func.date(WeatherForecast.ts),
         )
         .all()
     )
 
-    X = np.array([[data.temper, data.humid, data.precip] for data in
-                  historical_data])
+    X = np.array([[data.temper, data.humid, data.precip] for data in historical_data])
     y = np.array([data.sm for data in historical_data])
 
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2,
-                                                        random_state=42)
+    X_train, X_test, y_train, y_test = train_test_split(
+        X, y, test_size=0.2, random_state=42
+    )
     model = LinearRegression()
 
     model.fit(X_train, y_train)
@@ -89,17 +84,16 @@ def get_predicted_sm(db: Session = Depends(get_db)):
     return soil_forecast_list
 
 
-
 @router.get(
-    "/hour/{specific_date}/{hour}",
+    "/hour/{date}/{hour}",
     response_model=SoilBase,
     summary="Returns soil details for a specified date and hour",
 )
-def get_soil_by_hour(specific_date: date, hour: int, db: Session = Depends(get_db)):
+def get_soil_by_hour(date: date, hour: int, db: Session = Depends(get_db)):
     soil_data = (
         db.query(Kidbright)
         .filter(
-            func.date(Kidbright.ts) == specific_date,
+            func.date(Kidbright.ts) == date,
             func.extract("hour", Kidbright.ts) == hour,
         )
         .order_by(Kidbright.ts.asc())

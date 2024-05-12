@@ -70,11 +70,11 @@ def get_forecast_weather(db: Session = Depends(get_db)):
 
 
 @router.get(
-    "/hour/{specific_date}/{hour}",
+    "/hour/{date}/{hour}",
     response_model=WeatherBase,
     summary="Returns weather details for a specified date and hour",
 )
-def get_weather_by_hour(specific_date: date, hour: int, db: Session = Depends(get_db)):
+def get_weather_by_hour(date: date, hour: int, db: Session = Depends(get_db)):
     weather_data = (
         db.query(
             Weather.ts,
@@ -93,7 +93,7 @@ def get_weather_by_hour(specific_date: date, hour: int, db: Session = Depends(ge
             & (func.extract("hour", Weather.ts) == func.extract("hour", Kidbright.ts)),
         )
         .filter(
-            func.date(Weather.ts) == specific_date,
+            func.date(Weather.ts) == date,
             func.extract("hour", Weather.ts) == hour,
         )
         .order_by(Weather.ts.asc())
