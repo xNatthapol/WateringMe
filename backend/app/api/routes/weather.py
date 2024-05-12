@@ -107,3 +107,40 @@ def get_weather_by_hour(date: date, hour: int, db: Session = Depends(get_db)):
         )
 
     return weather_data
+
+
+@router.get(
+    "/hour/{date}",
+    response_model=List[WeatherBase],
+    summary="Returns weather details for a specified date",
+)
+def get_weather_by_date(date: date, db: Session = Depends(get_db)):
+    weather_data = (
+        db.query(
+            Weather.ts,
+            Weather.lat,
+            Weather.lon,
+            Weather.condi,
+            Weather.conic,
+            Weather.humid,
+            Weather.temper,
+            Weather.precip,
+            Kidbright.light,
+        )
+        .join(
+            Kidbright,
+            (func.date(Weather.ts) == func.date(Kidbright.ts))
+            & (func.extract("hour", Weather.ts) == func.extract("hour", Kidbright.ts)),
+        )
+        .filter(func.date(Weather.ts) == date)
+        .order_by(Weather.ts.asc())
+        .all()
+    )
+
+    if not weather_data:
+        raise HTTPException(
+            status_code=404,
+            detail="Weather data not found for the specified date and hour",
+        )
+
+    return weather_data
