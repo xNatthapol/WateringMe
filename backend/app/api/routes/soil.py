@@ -1,11 +1,16 @@
-from datetime import date
+from datetime import date, datetime, timedelta
+from typing import List
 
+import numpy as np
 from fastapi import APIRouter, Depends, HTTPException
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
 from sqlalchemy.orm import Session
 from sqlalchemy.sql import func
 
 from app.api.deps import get_db
 from app.models.kidbright import Kidbright
+from app.models.weather import Weather, WeatherForecast
 from app.schemas.soil import SoilBase
 
 router = APIRouter(prefix="/soil", tags=["Soil"])
@@ -21,6 +26,68 @@ def get_current_soil(db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Soil data not found")
 
     return current_soil
+
+
+@router.get("/forcast", response_model=List[SoilBase])
+def get_predicted_sm(db: Session = Depends(get_db)):
+
+    historical_data = (
+        db.query(
+            Weather.temper,
+            Weather.humid,
+            Weather.precip,
+            Kidbright.sm
+        )
+        .join(
+            Kidbright,
+            (func.date(Weather.ts) == func.date(Kidbright.ts)) &
+            (func.extract("hour", Weather.ts) == func.extract("hour", Kidbright.ts)),
+        )
+        .all()
+    )
+
+    current_date = (datetime.utcnow() + timedelta(hours=8)).date()
+    current_hour = (datetime.utcnow() + timedelta(hours=7)).hour
+
+    forecast_data = (
+        db.query(
+            WeatherForecast.ts,
+            WeatherForecast.lat,
+            WeatherForecast.lon,
+            WeatherForecast.humid,
+            WeatherForecast.temper,
+            WeatherForecast.precip
+        )
+        .filter(
+            current_hour < func.extract('hour', WeatherForecast.ts),
+            current_date == func.date(WeatherForecast.ts)
+        )
+        .all()
+    )
+
+    X = np.array([[data.temper, data.humid, data.precip] for data in
+                  historical_data])
+    y = np.array([data.sm for data in historical_data])
+
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2,
+                                                        random_state=42)
+    model = LinearRegression()
+
+    model.fit(X_train, y_train)
+
+    predicted_sm_list = []
+    for data in forecast_data:
+        features = np.array([[data.temper, data.humid, data.precip]])
+        predicted_sm = model.predict(features)
+        predicted_sm_list.append(predicted_sm[0])
+
+    soil_forecast_list = [
+        SoilBase(ts=data.ts, lat=data.lat, lon=data.lon, sm=predicted_sm)
+        for data, predicted_sm in zip(forecast_data, predicted_sm_list)
+    ]
+
+    return soil_forecast_list
+
 
 
 @router.get(

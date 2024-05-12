@@ -8,7 +8,3 @@ class SoilBase(BaseModel):
     lat: float
     lon: float
     sm: float
-
-
-class SoilForecastBase(SoilBase):
-    pet: float
