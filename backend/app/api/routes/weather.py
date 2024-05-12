@@ -16,7 +16,7 @@ router = APIRouter(prefix="/weather", tags=["Weather"])
 @router.get(
     "/current",
     response_model=WeatherBase,
-    summary="Returns current hour weather details",
+    summary="Returns currently hour weather details",
 )
 def get_current_weather(db: Session = Depends(get_db)):
     current_weather = (
@@ -49,7 +49,7 @@ def get_current_weather(db: Session = Depends(get_db)):
 @router.get(
     "/forecast",
     response_model=List[WeatherForecastBase],
-    summary="Returns a list of forecast weather details for the current day",
+    summary="Returns a list of forecast weather details at the current day",
 )
 def get_forecast_weather(db: Session = Depends(get_db)):
     # Get the start and end of the current day
@@ -72,7 +72,7 @@ def get_forecast_weather(db: Session = Depends(get_db)):
 @router.get(
     "/hour/{date}/{hour}",
     response_model=WeatherBase,
-    summary="Returns weather details for a specified date and hour",
+    summary="Returns weather details at specific date and hour",
 )
 def get_weather_by_hour(date: date, hour: int, db: Session = Depends(get_db)):
     weather_data = (
@@ -112,7 +112,7 @@ def get_weather_by_hour(date: date, hour: int, db: Session = Depends(get_db)):
 @router.get(
     "/hour/{date}",
     response_model=List[WeatherBase],
-    summary="Returns weather details for a specified date",
+    summary="Returns weather details at specific date",
 )
 def get_weather_by_date(date: date, db: Session = Depends(get_db)):
     weather_data = (
