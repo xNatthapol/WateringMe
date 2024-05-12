@@ -1,11 +1,14 @@
+from datetime import date, datetime
+from typing import List
+
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from sqlalchemy.sql import func
 
 from app.api.deps import get_db
 from app.models.kidbright import Kidbright
-from app.models.weather import Weather
-from app.schemas.weather import WeatherBase
+from app.models.weather import Weather, WeatherForecast
+from app.schemas.weather import WeatherBase, WeatherForecastBase
 
 router = APIRouter(prefix="/weather", tags=["Weather"])
 
@@ -37,3 +40,22 @@ def get_current_weather(db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Weather data not found")
 
     return current_weather
+
+
+@router.get("/forecast", response_model=List[WeatherForecastBase])
+def get_forecast_weather(db: Session = Depends(get_db)):
+    # Get the start and end of the current day
+    today_start = datetime.combine(date.today(), datetime.min.time())
+    today_end = datetime.combine(date.today(), datetime.max.time())
+
+    forecast_weather = (
+        db.query(WeatherForecast)
+        .filter(WeatherForecast.ts >= today_start, WeatherForecast.ts <= today_end)
+        .order_by(WeatherForecast.ts.asc())
+        .all()
+    )
+
+    if not forecast_weather:
+        raise HTTPException(status_code=404, detail="Weather forecast data not found")
+
+    return forecast_weather
