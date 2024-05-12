@@ -72,7 +72,7 @@ def get_forecast_weather(db: Session = Depends(get_db)):
 @router.get(
     "/hour/{date}/{hour}",
     response_model=WeatherBase,
-    summary="Returns weather details at specific date and hour",
+    summary="Returns weather details at specified date and hour",
 )
 def get_weather_by_hour(date: date, hour: int, db: Session = Depends(get_db)):
     weather_data = (
@@ -112,7 +112,7 @@ def get_weather_by_hour(date: date, hour: int, db: Session = Depends(get_db)):
 @router.get(
     "/hour/{date}",
     response_model=List[WeatherBase],
-    summary="Returns weather details at specific date",
+    summary="Returns weather details at the specific date",
 )
 def get_weather_by_date(date: date, db: Session = Depends(get_db)):
     weather_data = (
@@ -140,7 +140,7 @@ def get_weather_by_date(date: date, db: Session = Depends(get_db)):
     if not weather_data:
         raise HTTPException(
             status_code=404,
-            detail="Weather data not found for the specified date",
+            detail="Weather data not found at the specified date",
         )
 
     return weather_data

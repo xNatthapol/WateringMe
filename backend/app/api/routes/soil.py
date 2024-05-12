@@ -89,7 +89,7 @@ def get_predicted_sm(db: Session = Depends(get_db)):
 @router.get(
     "/hour/{date}/{hour}",
     response_model=SoilBase,
-    summary="Returns soil details at specific date and hour",
+    summary="Returns soil details at specified date and hour",
 )
 def get_soil_by_hour(date: date, hour: int, db: Session = Depends(get_db)):
     soil_data = (
@@ -105,7 +105,7 @@ def get_soil_by_hour(date: date, hour: int, db: Session = Depends(get_db)):
     if not soil_data:
         raise HTTPException(
             status_code=404,
-            detail="Soil data not found for the specified date and hour",
+            detail="Soil data not found at specified date and hour",
         )
 
     return soil_data
@@ -114,7 +114,7 @@ def get_soil_by_hour(date: date, hour: int, db: Session = Depends(get_db)):
 @router.get(
     "/hour/{date}",
     response_model=List[SoilBase],
-    summary="Returns soil details for a specified date",
+    summary="Returns soil details at the specified date",
 )
 def get_soil_by_date(date: date, db: Session = Depends(get_db)):
     soil_data = (
