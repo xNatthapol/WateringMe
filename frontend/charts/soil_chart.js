@@ -50,7 +50,7 @@ async function createChart() {
 
     // Plot layout configuration
     var layout = {
-      title: "Soil Moisture Data Visualization",
+      title: "Soil Moisture Visualization",
       xaxis: {
         title: "Timestamp",
         type: "date",
