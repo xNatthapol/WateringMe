@@ -7,7 +7,7 @@ from app.models.kidbright import Kidbright
 from app.models.weather import Weather
 from app.schemas.weather import WeatherBase
 
-router = APIRouter(prefix="/weather", tags=["weather"])
+router = APIRouter(prefix="/weather", tags=["Weather"])
 
 
 @router.get("/current", response_model=WeatherBase)
