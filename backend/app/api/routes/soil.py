@@ -112,7 +112,7 @@ async def get_soil_by_hour(date: date, hour: int, db: Session = Depends(get_db))
 
 
 @router.get(
-    "/hour/{date}",
+    "/day/{date}",
     response_model=List[SoilBase],
     summary="Returns soil details at the specified date",
 )

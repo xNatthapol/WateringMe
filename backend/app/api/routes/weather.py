@@ -110,7 +110,7 @@ async def get_weather_by_hour(date: date, hour: int, db: Session = Depends(get_d
 
 
 @router.get(
-    "/hour/{date}",
+    "/day/{date}",
     response_model=List[WeatherBase],
     summary="Returns weather details at the specific date",
 )
