@@ -1,6 +1,11 @@
-import { fetchData, getCurrentDateFormatted } from "./utils.js";
+import {
+  fetchData,
+  getCurrentDateFormatted,
+  calculateOptimalDtick,
+  calculateAxisPadding,
+} from "./utils.js";
 
-async function createChart() {
+async function createSoilChart() {
   try {
     const currentDate = getCurrentDateFormatted();
 
@@ -47,6 +52,11 @@ async function createChart() {
       .map((data) => data.sm);
     const minValue = Math.min(...allValues);
     const maxValue = Math.max(...allValues);
+    const optimalDtick = calculateOptimalDtick(minValue, maxValue);
+    const { adjustedMin, adjustedMax } = calculateAxisPadding(
+      minValue,
+      maxValue,
+    );
 
     // Plot layout configuration
     var layout = {
@@ -57,17 +67,17 @@ async function createChart() {
       },
       yaxis: {
         title: "Soil Moisture (%)",
-        dtick: 1.0,
-        range: [minValue - 3, maxValue + 3],
+        dtick: optimalDtick,
+        range: [adjustedMin, adjustedMax],
       },
       autosize: true,
     };
 
     // Render the plot
-    Plotly.newPlot("chart", [forecastTrace, historicalTrace], layout);
+    Plotly.newPlot("soilChart", [forecastTrace, historicalTrace], layout);
   } catch (error) {
     console.error("Error fetching or plotting data:", error);
   }
 }
 
-createChart();
+createSoilChart();
