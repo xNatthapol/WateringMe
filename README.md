@@ -99,10 +99,15 @@ copy sample.env .env
 ### Run the tests
 
 ```bash
-python -m unittest discover -s tests
+python -m unittest
 ```
 
 > If python cannot work well, use `python3` instead
+> If `python -m unittest` not work you can try to add `discover -s tests`
+
+```bash
+python -m unittest discover -s tests
+```
 
 ### Run the application
 
