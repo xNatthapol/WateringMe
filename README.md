@@ -90,6 +90,14 @@ Create `.env` file and copy the content from `.env.example` file
 copy sample.env .env
 ```
 
+### Run the tests
+
+```bash
+python -m unittest discover -s tests
+```
+
+> If python cannot work well, use `python3` instead
+
 ### Run the application
 
 Move into `app/` directory
