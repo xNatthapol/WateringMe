@@ -40,6 +40,22 @@ class TestSoilEndpoints(BaseTestCase):
         self.assertEqual(response.status_code, 404)
         self.assertEqual(response.json(), {'detail': 'Soil data not found at specified date and hour'})
 
+    def test_soil_hour_invalid_date_and_neg_hr(self):
+        """Ensure the soil conditions by specific hour endpoint returns a successful response."""
+        response = self.client.get(f"/soil/hour/{self.invalid_date}/{self.negative_hour}")
+        self.assertEqual(response.status_code, 404)
+        self.assertEqual(response.json(), {'detail': 'Not Found'})
+
+    def test_soil_hour_string_hour(self):
+        """Ensure the soil conditions by specific hour endpoint returns a successful response."""
+        response = self.client.get(f"/soil/hour/{self.date}/{self.string_hour}")
+        self.assertEqual(response.status_code, 422)
+        self.assertEqual(response.json(), {'detail': [{'input': '42o',
+                                                        'loc': ['path', 'hour'],
+                                                        'msg':
+                    'Input should be a valid integer, unable to parse string '
+                    'as an integer','type': 'int_parsing'}]})
+
     def test_soil_day(self):
         """Ensure the soil conditions by specific day endpoint returns a successful response."""
         response = self.client.get(f"/soil/day/{self.date}")
