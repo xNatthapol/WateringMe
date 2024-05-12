@@ -1,4 +1,4 @@
-from datetime import date, datetime, timedelta
+from datetime import date, datetime, timedelta, timezone
 from typing import List
 
 import numpy as np
@@ -43,8 +43,8 @@ async def get_predicted_sm(db: Session = Depends(get_db)):
         .all()
     )
 
-    current_date = (datetime.utcnow() + timedelta(hours=8)).date()
-    current_hour = (datetime.utcnow() + timedelta(hours=7)).hour
+    current_date = (datetime.now(timezone.utc) + timedelta(hours=8)).date()
+    current_hour = (datetime.now(timezone.utc) + timedelta(hours=7)).hour
 
     forecast_data = (
         db.query(
