@@ -13,7 +13,11 @@ from app.schemas.weather import WeatherBase, WeatherForecastBase
 router = APIRouter(prefix="/weather", tags=["Weather"])
 
 
-@router.get("/current", response_model=WeatherBase)
+@router.get(
+    "/current",
+    response_model=WeatherBase,
+    summary="Returns current hour weather details",
+)
 def get_current_weather(db: Session = Depends(get_db)):
     current_weather = (
         db.query(
@@ -42,7 +46,11 @@ def get_current_weather(db: Session = Depends(get_db)):
     return current_weather
 
 
-@router.get("/forecast", response_model=List[WeatherForecastBase])
+@router.get(
+    "/forecast",
+    response_model=List[WeatherForecastBase],
+    summary="Returns a list of forecast weather details for the current day",
+)
 def get_forecast_weather(db: Session = Depends(get_db)):
     # Get the start and end of the current day
     today_start = datetime.combine(date.today(), datetime.min.time())
@@ -59,3 +67,43 @@ def get_forecast_weather(db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Weather forecast data not found")
 
     return forecast_weather
+
+
+@router.get(
+    "/hour/{specific_date}/{hour}",
+    response_model=WeatherBase,
+    summary="Returns weather details for a specified date and hour",
+)
+def get_weather_by_hour(specific_date: date, hour: int, db: Session = Depends(get_db)):
+    weather_data = (
+        db.query(
+            Weather.ts,
+            Weather.lat,
+            Weather.lon,
+            Weather.condi,
+            Weather.conic,
+            Weather.humid,
+            Weather.temper,
+            Weather.precip,
+            Kidbright.light,
+        )
+        .join(
+            Kidbright,
+            (func.date(Weather.ts) == func.date(Kidbright.ts))
+            & (func.extract("hour", Weather.ts) == func.extract("hour", Kidbright.ts)),
+        )
+        .filter(
+            func.date(Weather.ts) == specific_date,
+            func.extract("hour", Weather.ts) == hour,
+        )
+        .order_by(Weather.ts.asc())
+        .first()
+    )
+
+    if not weather_data:
+        raise HTTPException(
+            status_code=404,
+            detail="Weather data not found for the specified date and hour",
+        )
+
+    return weather_data

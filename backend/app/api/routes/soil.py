@@ -8,7 +8,9 @@ from app.schemas.soil import SoilBase
 router = APIRouter(prefix="/soil", tags=["Soil"])
 
 
-@router.get("/current", response_model=SoilBase)
+@router.get(
+    "/current", response_model=SoilBase, summary="Returns current hour soil details"
+)
 def get_current_soil(db: Session = Depends(get_db)):
     current_soil = db.query(Kidbright).order_by(Kidbright.id.desc()).first()
 
