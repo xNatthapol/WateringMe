@@ -18,7 +18,7 @@ router = APIRouter(prefix="/weather", tags=["Weather"])
     response_model=WeatherBase,
     summary="Returns currently hour weather details",
 )
-def get_current_weather(db: Session = Depends(get_db)):
+async def get_current_weather(db: Session = Depends(get_db)):
     current_weather = (
         db.query(
             Weather.ts,
@@ -51,7 +51,7 @@ def get_current_weather(db: Session = Depends(get_db)):
     response_model=List[WeatherForecastBase],
     summary="Returns a list of forecast weather details at the current day",
 )
-def get_forecast_weather(db: Session = Depends(get_db)):
+async def get_forecast_weather(db: Session = Depends(get_db)):
     # Get the start and end of the current day
     today_start = datetime.combine(date.today(), datetime.min.time())
     today_end = datetime.combine(date.today(), datetime.max.time())
@@ -74,7 +74,7 @@ def get_forecast_weather(db: Session = Depends(get_db)):
     response_model=WeatherBase,
     summary="Returns weather details at specified date and hour",
 )
-def get_weather_by_hour(date: date, hour: int, db: Session = Depends(get_db)):
+async def get_weather_by_hour(date: date, hour: int, db: Session = Depends(get_db)):
     weather_data = (
         db.query(
             Weather.ts,
@@ -114,7 +114,7 @@ def get_weather_by_hour(date: date, hour: int, db: Session = Depends(get_db)):
     response_model=List[WeatherBase],
     summary="Returns weather details at the specific date",
 )
-def get_weather_by_date(date: date, db: Session = Depends(get_db)):
+async def get_weather_by_date(date: date, db: Session = Depends(get_db)):
     weather_data = (
         db.query(
             Weather.ts,

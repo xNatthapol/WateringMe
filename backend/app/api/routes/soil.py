@@ -19,7 +19,7 @@ router = APIRouter(prefix="/soil", tags=["Soil"])
 @router.get(
     "/current", response_model=SoilBase, summary="Returns currently hour soil details"
 )
-def get_current_soil(db: Session = Depends(get_db)):
+async def get_current_soil(db: Session = Depends(get_db)):
     current_soil = db.query(Kidbright).order_by(Kidbright.id.desc()).first()
 
     if not current_soil:
@@ -31,7 +31,7 @@ def get_current_soil(db: Session = Depends(get_db)):
 @router.get(
     "/forecast", response_model=List[SoilBase], summary="Return predicted soil details"
 )
-def get_predicted_sm(db: Session = Depends(get_db)):
+async def get_predicted_sm(db: Session = Depends(get_db)):
 
     historical_data = (
         db.query(Weather.temper, Weather.humid, Weather.precip, Kidbright.sm)
@@ -91,7 +91,7 @@ def get_predicted_sm(db: Session = Depends(get_db)):
     response_model=SoilBase,
     summary="Returns soil details at specified date and hour",
 )
-def get_soil_by_hour(date: date, hour: int, db: Session = Depends(get_db)):
+async def get_soil_by_hour(date: date, hour: int, db: Session = Depends(get_db)):
     soil_data = (
         db.query(Kidbright)
         .filter(
@@ -116,7 +116,7 @@ def get_soil_by_hour(date: date, hour: int, db: Session = Depends(get_db)):
     response_model=List[SoilBase],
     summary="Returns soil details at the specified date",
 )
-def get_soil_by_date(date: date, db: Session = Depends(get_db)):
+async def get_soil_by_date(date: date, db: Session = Depends(get_db)):
     soil_data = (
         db.query(Kidbright)
         .filter(

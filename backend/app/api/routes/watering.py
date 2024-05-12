@@ -19,11 +19,12 @@ class SoilType(str, Enum):
 
 
 @router.get(
-    "/watering", response_model=WateringBase,
-    summary="Returns weather details, current soil moisture level and suggestion"
+    "/watering",
+    response_model=WateringBase,
+    summary="Returns weather details, current soil moisture level and suggestion",
 )
-def get_condition(soil_type: SoilType, db: Session = Depends(get_db)):
-    suggestion = ''
+async def get_condition(soil_type: SoilType, db: Session = Depends(get_db)):
+    suggestion = ""
     weather_data = (
         db.query(
             Kidbright.ts,
@@ -37,8 +38,7 @@ def get_condition(soil_type: SoilType, db: Session = Depends(get_db)):
         .join(
             Kidbright,
             (func.date(Weather.ts) == func.date(Kidbright.ts))
-            & (func.extract("hour", Weather.ts) == func.extract("hour",
-                                                                Kidbright.ts)),
+            & (func.extract("hour", Weather.ts) == func.extract("hour", Kidbright.ts)),
         )
         .order_by(Weather.ts.desc())
         .first()
@@ -59,7 +59,7 @@ def get_condition(soil_type: SoilType, db: Session = Depends(get_db)):
         temper=weather_data.temper,
         humid=weather_data.humid,
         sm=weather_data.sm,
-        suggest=suggestion
+        suggest=suggestion,
     )
 
 
@@ -74,7 +74,9 @@ def sandy_soil_suggestion(weather_data):
     elif weather_data.temper > 30 and weather_data.humid > 70:
         suggestion = "Water deeply and less frequently to ensure moisture penetrates deeper into the sandy soil. Consider mulching to retain moisture."
     else:
-        suggestion = "Monitor soil moisture regularly and adjust watering frequency accordingly."
+        suggestion = (
+            "Monitor soil moisture regularly and adjust watering frequency accordingly."
+        )
     return suggestion
 
 
@@ -89,7 +91,9 @@ def clay_soil_suggestion(weather_data):
     elif weather_data.temper > 30 > weather_data.humid:
         suggestion = "Water slowly and evenly to prevent runoff, as clay soil can become compacted when dry. Consider incorporating organic matter to improve water retention."
     else:
-        suggestion = "Monitor soil moisture regularly and adjust watering frequency accordingly."
+        suggestion = (
+            "Monitor soil moisture regularly and adjust watering frequency accordingly."
+        )
     return suggestion
 
 
@@ -104,6 +108,7 @@ def loam_soil_suggestion(weather_data):
     elif 20 <= weather_data.temper <= 25 and 40 <= weather_data.humid <= 60:
         suggestion = "Water as needed, ensuring the soil remains consistently moist but not waterlogged. Monitor soil moisture regularly and adjust watering frequency accordingly."
     else:
-        suggestion = "Monitor soil moisture regularly and adjust watering frequency accordingly."
+        suggestion = (
+            "Monitor soil moisture regularly and adjust watering frequency accordingly."
+        )
     return suggestion
-

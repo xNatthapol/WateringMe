@@ -14,7 +14,7 @@ router = APIRouter(prefix="/pet", tags=["PET"])
     response_model=PETBase,
     summary="Returns PET at the current day",
 )
-def get_pet_per_day(db: Session = Depends(get_db)):
+async def get_pet_per_day(db: Session = Depends(get_db)):
     forecast_pet = (
         db.query(PET.ts, PET.lat, PET.lon, PET.pet).order_by(PET.ts.desc()).first()
     )
