@@ -10,5 +10,5 @@ class SoilBase(BaseModel):
     sm: float
 
 
-class SoilForecast(SoilBase):
+class SoilForecastBase(SoilBase):
     pet: float
