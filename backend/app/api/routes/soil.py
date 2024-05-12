@@ -127,7 +127,7 @@ def get_soil_by_date(date: date, db: Session = Depends(get_db)):
     if not soil_data:
         raise HTTPException(
             status_code=404,
-            detail="Soil data not found for the specified date and hour",
+            detail="Soil data not found for the specified date",
         )
 
     return soil_data

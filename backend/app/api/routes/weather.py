@@ -140,7 +140,7 @@ def get_weather_by_date(date: date, db: Session = Depends(get_db)):
     if not weather_data:
         raise HTTPException(
             status_code=404,
-            detail="Weather data not found for the specified date and hour",
+            detail="Weather data not found for the specified date",
         )
 
     return weather_data
