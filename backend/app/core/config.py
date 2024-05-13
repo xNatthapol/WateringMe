@@ -14,7 +14,7 @@ class Settings(BaseSettings):
     DESCRIPTION: str = "API of Project WateringMe"
 
     # PATH settings
-    ROOT_PATH: str = "/"
+    ROOT_PATH: str = "/api/v1"
     DOCS_URL: str = "/docs"
     REDOC_URL: str = "/redoc"
 
