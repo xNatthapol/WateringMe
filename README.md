@@ -141,3 +141,5 @@ Run frontend application on localhost port 3000
 ```bash
 python -m http.server 3000
 ```
+
+And go to `http://127.0.0.1:3000/dashboard.html`
