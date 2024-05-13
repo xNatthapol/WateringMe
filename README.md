@@ -35,6 +35,7 @@ loss from soil, mm/day.
 -
 
 ## Tools & Libraries
+
 - Python version 3.10 - 3.12
 - FastAPI
 - Plotly
@@ -111,14 +112,30 @@ python -m unittest discover -s tests
 
 ### Run the application
 
+#### Run the backend application
+
 Move into `app/` directory
 
 ```bash
 cd app/
 ```
 
-Run application
+Run backend application on localhost port 8000
 
 ```bash
 fastapi dev main.py
+```
+
+#### Run the frontend application
+
+Assume you are in `app/` directory
+
+```bash
+cd ../../frontend
+```
+
+Run frontend application on localhost port 3000
+
+```bash
+python -m http.server 3000
 ```
