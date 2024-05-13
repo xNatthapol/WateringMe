@@ -90,7 +90,7 @@ venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-Create `.env` file and copy the content from `.env.example` file
+Create `.env` file and copy the content from `.env.example` file  
 
 - MacOS or Linux
 
@@ -103,6 +103,8 @@ Create `.env` file and copy the content from `.env.example` file
 ```cmd
 copy .env.example .env
 ```
+
+You can look into `.env` for the instruction
 
 ### Run the tests
 
@@ -136,11 +138,8 @@ fastapi dev main.py
 
 #### Run the frontend application
 
-Assume you are in `app/` directory
-
-```bash
-cd ../../frontend
-```
+Open new terminal
+and `cd` to the `WateringMe/frontend` directory
 
 Run frontend application on localhost port 3000
 
