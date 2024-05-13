@@ -4,15 +4,36 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Environmental Dashboard</title>
+    <link
+      href="https://fonts.googleapis.com/css?family=Open+Sans:400&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-    <script type="module" src="charts/soil_chart.js"></script>
-    <script type="module" src="charts/temp_chart.js"></script>
-    <script type="module" src="charts/humid_chart.js"></script>
+    <script type="module" src="info/soil_chart.js"></script>
+    <script type="module" src="info/temp_chart.js"></script>
+    <script type="module" src="info/humid_chart.js"></script>
+    <script type="module" src="info/text_info.js"></script>
   </head>
   <body>
-    <h1>Environmental Dashboard</h1>
-    <div id="soilChart" style="width: 100%; height: 500px"></div>
-    <div id="tempChart" style="width: 100%; height: 500px"></div>
-    <div id="humidChart" style="width: 100%; height: 500px"></div>
+    <div id="head"><h1>Environmental Dashboard</h1></div>
+    <div id="data">
+      <div id="infoBox">
+        <img
+          id="weatherIcon"
+          src=""
+          alt="Weather Icon"
+          style="width: 100px; height: 100px"
+        />
+        <p id="condition">Condition: --</p>
+        <p id="temperature">Temperature: -- °C</p>
+        <p id="humidity">Humidity: --%</p>
+        <p id="soilMoisture">Soil Moisture: --%</p>
+        <p id="wateringSuggestion">Suggestion: --</p>
+      </div>
+      <div id="soilChart" class="chart"></div>
+      <div id="tempChart" class="chart"></div>
+      <div id="humidChart" class="chart"></div>
+    </div>
   </body>
 </html>

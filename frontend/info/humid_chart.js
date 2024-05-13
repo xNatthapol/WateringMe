@@ -5,11 +5,11 @@ import {
   calculateAxisPadding,
 } from "./utils.js";
 
-async function createTempChart() {
+async function createHumidChart() {
   try {
     const currentDate = getCurrentDateFormatted();
 
-    // Fetch historical temperature data
+    // Fetch historical humidity data
     const historicalData = await fetchData(
       `http://127.0.0.1:8000/api/v1/weather/day/${currentDate}`,
     );
@@ -20,7 +20,7 @@ async function createTempChart() {
     );
     lastHistoricalDataTime.setHours(lastHistoricalDataTime.getHours() + 1); // Set to next hour
 
-    // Fetch forecast temperature data
+    // Fetch forecast humidity data
     const forecastData = await fetchData(
       "http://127.0.0.1:8000/api/v1/weather/forecast",
     );
@@ -34,34 +34,34 @@ async function createTempChart() {
     if (historicalData.length > 0 && filteredForecastData.length > 0) {
       filteredForecastData.unshift({
         ts: historicalData[historicalData.length - 1].ts, // last historical timestamp
-        temper: historicalData[historicalData.length - 1].temper, // last historical temperature
+        humid: historicalData[historicalData.length - 1].humid, // last historical humidity
       });
     }
 
     // Prepare filtered forecast data for plotting
     const forecastTrace = {
       x: filteredForecastData.map((data) => data.ts),
-      y: filteredForecastData.map((data) => data.temper),
+      y: filteredForecastData.map((data) => data.humid),
       type: "scatter",
       mode: "lines+markers",
-      name: "Forecast Temperature",
-      line: { color: "red" },
+      name: "Forecast Humidity",
+      line: { color: "green" },
     };
 
     // Prepare historical data for plotting
     const historicalTrace = {
       x: historicalData.map((data) => data.ts),
-      y: historicalData.map((data) => data.temper),
+      y: historicalData.map((data) => data.humid),
       type: "scatter",
       mode: "lines+markers",
-      name: "Historical Temperature",
-      line: { color: "blue" },
+      name: "Historical Humidity",
+      line: { color: "black" },
     };
 
     // Calculate min and max for Y-axis
     const allTemps = historicalData
       .concat(filteredForecastData)
-      .map((data) => data.temper);
+      .map((data) => data.humid);
     const minValue = Math.min(...allTemps);
     const maxValue = Math.max(...allTemps);
     const optimalDtick = calculateOptimalDtick(minValue, maxValue);
@@ -72,13 +72,13 @@ async function createTempChart() {
 
     // Plot layout configuration
     var layout = {
-      title: "Temperature Visualization",
+      title: "Humidity Visualization",
       xaxis: {
         title: "Timestamp",
         type: "date",
       },
       yaxis: {
-        title: "Temperature (°C)",
+        title: "Humidity (%)",
         dtick: optimalDtick,
         range: [adjustedMin, adjustedMax],
       },
@@ -86,10 +86,10 @@ async function createTempChart() {
     };
 
     // Render the plot
-    Plotly.newPlot("tempChart", [forecastTrace, historicalTrace], layout);
+    Plotly.newPlot("humidChart", [forecastTrace, historicalTrace], layout);
   } catch (error) {
     console.error("Error fetching or plotting data:", error);
   }
 }
 
-createTempChart();
+createHumidChart();
