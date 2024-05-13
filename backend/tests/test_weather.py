@@ -28,21 +28,31 @@ class TestWeatherEndpoints(BaseTestCase):
     def test_weather_hour_negative_hour(self):
         """Ensure the weather by hour endpoint returns a successful response."""
         response = self.client.get(f"/weather/hour/{self.date}/{self.negative_hour}")
-        self.assertEqual(response.status_code, 404)
+        self.assertEqual(response.status_code, 400)
         self.assertEqual(response.json(), {
-            'detail': 'Weather data not found for the specified date and hour'})
+            'detail': 'Hour value cannot be negative'})
 
     def test_weather_hour_unreal_date(self):
         """Ensure the weather by hour endpoint returns a successful response."""
         response = self.client.get(f"/weather/hour/{self.invalid_date}/{self.hour}")
-        self.assertEqual(response.status_code, 404)
-        self.assertEqual(response.json(), {"detail": "Not Found"})
+        self.assertEqual(response.status_code, 422)
+        self.assertEqual(response.json(), {'detail': [{'ctx': {'error': 'month value is outside expected range of 1-12'},
+              'input': '3000-13-40',
+              'loc': ['path', 'date'],
+              'msg': 'Input should be a valid date or datetime, month value is '
+                     'outside expected range of 1-12',
+              'type': 'date_from_datetime_parsing'}]})
 
     def test_weather_hour_unreal_date_and_neg_hr(self):
         """Ensure the weather by hour endpoint returns a successful response."""
         response = self.client.get(f"/weather/hour/{self.invalid_date}/{self.negative_hour}")
-        self.assertEqual(response.status_code, 404)
-        self.assertEqual(response.json(), {"detail": "Not Found"})
+        self.assertEqual(response.status_code, 422)
+        self.assertEqual(response.json(), {'detail': [{'ctx': {'error': 'month value is outside expected range of 1-12'},
+              'input': '3000-13-40',
+              'loc': ['path', 'date'],
+              'msg': 'Input should be a valid date or datetime, month value is '
+                     'outside expected range of 1-12',
+              'type': 'date_from_datetime_parsing'}]})
 
     def test_weather_hour_string_hour(self):
         """Ensure the weather by hour endpoint returns a successful response."""
