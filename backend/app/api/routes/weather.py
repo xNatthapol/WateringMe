@@ -77,7 +77,7 @@ async def get_forecast_weather(db: Session = Depends(get_db)):
 async def get_weather_by_hour(date: date, hour: int, db: Session = Depends(get_db)):
     if hour < 0:
         raise HTTPException(
-            status_code=400,
+            status_code=404,
             detail="Hour value cannot be negative",
         )
     weather_data = (

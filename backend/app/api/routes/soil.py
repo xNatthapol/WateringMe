@@ -95,7 +95,7 @@ async def get_soil_by_hour(date: date, hour: int, db: Session = Depends(get_db))
 
     if hour < 0:
         raise HTTPException(
-            status_code=400,
+            status_code=404,
             detail="Hour value cannot be negative",
         )
 
