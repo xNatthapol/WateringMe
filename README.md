@@ -34,6 +34,12 @@ loss from soil, mm/day.
 
 -
 
+## Tools & Libraries
+- Python version 3.10 - 3.12
+- FastAPI
+- Plotly
+- all requirements is stored in `backend/requirements.txt`
+
 ## Installation
 
 ### Clone the repository
@@ -116,8 +122,3 @@ Run application
 ```bash
 fastapi dev main.py
 ```
-
-## Requirements
-
-- Python version 3.10 - 3.12
-- all requirements is stored in `backend/requirements.txt`

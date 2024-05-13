@@ -92,6 +92,13 @@ async def get_predicted_sm(db: Session = Depends(get_db)):
     summary="Returns soil details at specified date and hour",
 )
 async def get_soil_by_hour(date: date, hour: int, db: Session = Depends(get_db)):
+
+    if hour < 0:
+        raise HTTPException(
+            status_code=404,
+            detail="Hour value cannot be negative",
+        )
+
     soil_data = (
         db.query(Kidbright)
         .filter(
