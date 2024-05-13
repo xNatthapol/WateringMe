@@ -81,13 +81,13 @@ Create `.env` file and copy the content from `.env.example` file
 - MacOS or Linux
 
 ```bash
- cp sample.env .env
+ cp .env.example .env
 ```
 
 - Windows
 
 ```cmd
-copy sample.env .env
+copy .env.example .env
 ```
 
 ### Run the tests
