@@ -32,7 +32,9 @@ loss from soil, mm/day.
 
 ### Data visualization
 
--
+Our visualized application provides the current temperature, 
+humidity and soil moisture data. It also displays a line graph
+to represent historical and forecast data.
 
 ## Tools & Libraries
 
