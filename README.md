@@ -36,6 +36,8 @@ Our visualized application provides the current temperature, 
 humidity and soil moisture data. It also displays a line graph
 to represent historical and forecast data.
 
+<img width="1440" alt="image" src="https://github.com/xNatthapol/WateringMe/assets/115071646/02738fa7-3089-45ba-a913-c91bb6e87b1a">
+
 ## Tools & Libraries
 
 - Python version 3.10 - 3.12
