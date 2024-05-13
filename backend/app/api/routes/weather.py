@@ -75,6 +75,11 @@ async def get_forecast_weather(db: Session = Depends(get_db)):
     summary="Returns weather details at specified date and hour",
 )
 async def get_weather_by_hour(date: date, hour: int, db: Session = Depends(get_db)):
+    if hour < 0:
+        raise HTTPException(
+            status_code=400,
+            detail="Hour value cannot be negative",
+        )
     weather_data = (
         db.query(
             Weather.ts,
