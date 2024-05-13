@@ -31,6 +31,7 @@ loss from soil, mm/day.
 - Watering suggestion
 
 <img width="1440" alt="image" src="https://github.com/xNatthapol/WateringMe/assets/115071646/9dda7ce1-957d-423e-855f-0dbf25a94272">
+<img width="1440" alt="image" src="https://github.com/xNatthapol/WateringMe/assets/115071646/dca436cd-dbc0-4172-bbd2-60b1aba53dd4">
 
 ### Data visualization
 
