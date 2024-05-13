@@ -2,8 +2,8 @@
 
 ## Member
 
-Natthapol Sermsaran 6510545527 Software engineering, Kasetsart University<br/>
-Natthadit Lertpisanwut 6510545403 Software engineering, Kasetsart University
+Natthapol Sermsaran 6510545527 Software and Knowledge Engineering, Kasetsart University<br/>
+Natthadit Lertpisanwut 6510545403 Software and Knowledge Engineering, Kasetsart University
 
 ## Overview
 
