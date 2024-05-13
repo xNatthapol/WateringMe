@@ -27,6 +27,6 @@ app.add_middleware(
 app.include_router(api_router)
 
 
-@app.get("/")
+@app.get("/", include_in_schema=False)
 async def redirect_docs():
     return RedirectResponse(settings.DOCS_URL)
